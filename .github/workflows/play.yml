@@ -1,0 +1,38 @@
+name: Build Android App
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🏗 Setup repository
+        uses: actions/checkout@v4
+
+      - name: 🏗 Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+
+      - name: 🏗 Setup EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+      - name: 🔒 Decode Google Service Account
+        run: |
+            echo "${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT }}" | base64 -d > gce-jalingo-ctc.json
+
+      - name: 📦 Install dependencies
+        run: npm install
+
+      - name: 🚀 Build app
+        run: eas build --platform android --non-interactive
+
+      - name: 🚀 Submit to Play Store
+        run: eas submit --platform android --latest
