@@ -13,3 +13,5 @@
 base64 -i gce-jalingo-ctc.json | tr -d '\n' | pbcopy
 ```
 3. Add to repo secrets in GitHub
+
+> Remember to generate expo token and add to repo secrets in GitHub
